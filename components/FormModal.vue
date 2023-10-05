@@ -10,7 +10,8 @@
       <el-input v-model="form.website" />
     </el-form-item>
     <el-form-item>
-      <el-button type="success" @click="submitForm">Save</el-button>
+      <el-button v-if="item" type="success" @click="submitForm(IS_EDIT)">Save</el-button>
+      <el-button v-else type="success" @click="submitForm(IS_CREATE)">Create</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -18,20 +19,25 @@
 <script>
 import { reactive, ref } from 'vue'
 import { useMainStore } from '../store';
+import { ElMessage } from 'element-plus'
 
 export default {
   props: {
     item: {
-      type: Object
+      type: Object,
     }
   },
   data() {
+    const IS_CREATE = 'isCreate';
+    const IS_EDIT = 'isEdit';
     return {
+      IS_CREATE,
+      IS_EDIT,
       store: useMainStore(),
       form: {
-        name: this.item.name,
-        email: this.item.email,
-        website: this.item.website,
+        name: this.item?.name || '',
+        email: this.item?.email || '',
+        website: this.item?.website || '',
       },
       formRef: ref(),
       rules: reactive({
@@ -50,15 +56,21 @@ export default {
       })
     }
   },
-  computed: {},
   methods: {
-    async submitForm() {
+    async submitForm(type) {
       const formEl = this.$refs.formRef;
 
       if (!formEl) return
-
       await formEl.validate((valid, fields) => {
-        if (valid) {
+
+        if (valid && type === this.IS_CREATE) {
+          this.store.posts = [this.form, ...this.store.posts];
+          this.$emit('closeModal');
+          ElMessage({
+            message: 'Success created!',
+            type: 'success',
+          })
+        } else if (valid && type === this.IS_EDIT) {
           this.store.posts = this.store.posts.map((user) => {
             if (user.id === this.item.id) {
               return user = {
@@ -66,11 +78,14 @@ export default {
               }
             } else return user;
           });
+          ElMessage({
+            message: 'Success edited!',
+            type: 'success',
+          })
         }
       })
     }
   },
-
 }
 </script>
 <style>
