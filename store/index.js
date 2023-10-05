@@ -16,9 +16,9 @@ export const useMainStore = defineStore('main', {
     async getPosts () {
       try {
         const { data } = await axios('https://jsonplaceholder.typicode.com/users')
-        console.log(data.slice(0, 5), 'RES');
         const res = data.slice(0, 5);
         this.posts = res;
+        console.log(data.slice(0, 5), 'RES');
 
         ElMessage({
           message: 'Data success received!',

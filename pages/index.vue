@@ -26,8 +26,6 @@ export default {
   },
   computed: {
     async posts() {
-      console.log(this.store, 'store');
-      console.log(this.$store.$state, 'STATE');
       return this.$store.$state?.posts;
     },
   },
