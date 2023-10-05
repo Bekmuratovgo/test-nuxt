@@ -9,7 +9,7 @@
       </div>
       <div class="card_icons">
         <div class="icon">
-          <div class="box" @click="dialogTableVisible = true">
+          <div class="box" @click="isEditModal = true">
             <img src="@/assets/img/edit.png" alt="SVG" />
           </div>
         </div>
@@ -30,10 +30,9 @@
       </div>
     </div>
 
-    <el-dialog v-model="dialogTableVisible" title="Edit user">
+    <el-dialog v-model="isEditModal" title="Edit user">
       <FormModal :item="item" />
     </el-dialog>
-
   </div>
 </template>
 
@@ -50,12 +49,11 @@ export default {
   },
   data() {
     return {
-      dialogTableVisible: false,
+      isEditModal: false,
       isConfirmDelete: false,
       store: useMainStore(),
     }
   },
-  computed: {},
   methods: {
     deletePost(id) {
       const res = []
@@ -72,7 +70,6 @@ export default {
       })
     },
   },
-
 }
 </script>
 <style>
